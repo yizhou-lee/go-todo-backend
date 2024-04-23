@@ -4,6 +4,7 @@ import (
 	"log"
 	"net/http"
 	"todo-backend/configs"
+	"todo-backend/models"
 	"todo-backend/routes"
 	"todo-backend/utils"
 
@@ -11,19 +12,20 @@ import (
 )
 
 func main() {
-	r := gin.Default()
+	router := gin.Default()
 
-	// Connect to MySQLDB
-	configs.ConnectMySQL()
+	// Connect to database and migrate
+	db := configs.ConnectMySQL()
+	configs.AutoMigrate(db, &models.Todo{})
 
 	// Routes
-	routes.TodoRoute(r)
+	routes.TodoRoute(router)
 
-	r.NoRoute(func(c *gin.Context) {
-		c.JSON(http.StatusNotFound, utils.ErrorResponse("Route not found", nil))
+	router.NoRoute(func(c *gin.Context) {
+		c.JSON(http.StatusNotFound, utils.ErrorResponse("Page not found", nil))
 	})
 
-	err := r.Run("localhost:8080")
+	err := router.Run("localhost:8080")
 	if err != nil {
 		log.Fatal(err)
 	}

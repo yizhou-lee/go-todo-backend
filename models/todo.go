@@ -15,10 +15,6 @@ type Todo struct {
 
 var db = configs.DB
 
-func init() {
-	configs.AutoMigrate(db, &Todo{})
-}
-
 func GetTodos() []Todo {
 	var todos []Todo
 	db.Find(&todos)
