@@ -5,6 +5,7 @@ import (
 	"net/http"
 	"todo-backend/configs"
 	"todo-backend/routes"
+	"todo-backend/utils"
 
 	"github.com/gin-gonic/gin"
 )
@@ -19,7 +20,7 @@ func main() {
 	routes.TodoRoute(r)
 
 	r.NoRoute(func(c *gin.Context) {
-		c.JSON(http.StatusNotFound, gin.H{"message": "Not found"})
+		c.JSON(http.StatusNotFound, utils.ErrorResponse("Route not found", nil))
 	})
 
 	err := r.Run("localhost:8080")
