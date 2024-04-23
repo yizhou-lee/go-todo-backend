@@ -21,3 +21,11 @@ func ConnectMySQL() *gorm.DB {
 
 // DB is a pointer to the database.
 var DB = ConnectMySQL()
+
+// AutoMigrate migrates the model to the database.
+func AutoMigrate(db *gorm.DB, model interface{}) {
+	err := db.AutoMigrate(&model)
+	if err != nil {
+		return
+	}
+}

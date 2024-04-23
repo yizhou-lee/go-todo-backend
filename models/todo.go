@@ -16,10 +16,7 @@ type Todo struct {
 var db = configs.DB
 
 func init() {
-	err := db.AutoMigrate(&Todo{})
-	if err != nil {
-		return
-	}
+	configs.AutoMigrate(db, &Todo{})
 }
 
 func GetTodos() []Todo {
