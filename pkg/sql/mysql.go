@@ -42,9 +42,9 @@ func GetDB() *gorm.DB {
 }
 
 // AutoMigrate migrates the model to the database.
-func AutoMigrate(db *gorm.DB, model interface{}) {
-	err := db.AutoMigrate(&model)
+func AutoMigrate(db *gorm.DB, model ...interface{}) {
+	err := db.AutoMigrate(model...)
 	if err != nil {
-		log.Fatal(err)
+		log.Printf("Failed to migrate model: %v", err)
 	}
 }
