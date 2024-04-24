@@ -13,7 +13,7 @@ type Todo struct {
 	Description string `json:"description"`
 }
 
-var db = configs.DB
+var db = configs.GetDB()
 
 func GetTodos() []Todo {
 	var todos []Todo
