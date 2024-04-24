@@ -13,39 +13,37 @@ type Todo struct {
 	Description string `json:"description"`
 }
 
-var db = sql.GetDB()
-
 func GetTodos() []Todo {
 	var todos []Todo
-	db.Find(&todos)
+	sql.GetDB().Find(&todos)
 	return todos
 }
 
 func CreateTodo(t *Todo) *Todo {
-	db.Create(t)
+	sql.GetDB().Create(t)
 	return t
 }
 
 func GetTodoByID(id int) *Todo {
 	var t Todo
-	db.First(&t, id)
+	sql.GetDB().First(&t, id)
 	return &t
 }
 
 func UpdateTodoByID(id int, t *Todo) *Todo {
 	var todo Todo
-	db.First(&todo, id)
+	sql.GetDB().First(&todo, id)
 	if todo.ID != 0 {
-		db.Model(&todo).Updates(t)
+		sql.GetDB().Model(&todo).Updates(t)
 	}
 	return &todo
 }
 
 func DeleteTodoByID(id int) *Todo {
 	var t Todo
-	db.First(&t, id)
+	sql.GetDB().First(&t, id)
 	if t.ID != 0 {
-		db.Delete(&t)
+		sql.GetDB().Delete(&t)
 	}
 	return &t
 }
