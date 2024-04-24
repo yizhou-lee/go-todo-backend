@@ -15,7 +15,7 @@ import (
 
 func main() {
 	// Read configuration
-	configs.InitConfig()
+	configs.LoadConfig()
 
 	// Connect to database and migrate the model
 	db := sql.ConnectMySQL()

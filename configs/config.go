@@ -6,13 +6,14 @@ import (
 	"github.com/spf13/viper"
 )
 
-// InitConfig reads the configuration file.
-func InitConfig() {
+// LoadConfig reads the configuration file.
+func LoadConfig() {
 	viper.SetConfigName("config")
 	viper.SetConfigType("yaml")
 	viper.AddConfigPath("configs/")
+
 	err := viper.ReadInConfig()
 	if err != nil {
-		log.Fatal(err)
+		log.Fatalf("Error reading config file, %s", err)
 	}
 }
