@@ -1,7 +1,7 @@
 package models
 
 import (
-	"todo-backend/configs"
+	"todo-backend/pkg/sql"
 
 	"gorm.io/gorm"
 )
@@ -13,7 +13,7 @@ type Todo struct {
 	Description string `json:"description"`
 }
 
-var db = configs.GetDB()
+var db = sql.GetDB()
 
 func GetTodos() []Todo {
 	var todos []Todo
