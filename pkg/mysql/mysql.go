@@ -1,11 +1,11 @@
-package sql
+package mysql
 
 import (
 	"fmt"
 	"log"
 	"sync"
+	"todo-backend/configs"
 
-	"github.com/spf13/viper"
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
 )
@@ -16,13 +16,13 @@ var (
 )
 
 // ConnectMySQL connects to MySQL and returns a pointer to the database.
-func ConnectMySQL() *gorm.DB {
+func ConnectMySQL(cfg *configs.Config) *gorm.DB {
 	once.Do(func() {
-		host := viper.GetString("mysql.host")
-		port := viper.GetString("mysql.port")
-		username := viper.GetString("mysql.username")
-		password := viper.GetString("mysql.password")
-		database := viper.GetString("mysql.database")
+		host := cfg.MySQL.Host
+		port := cfg.MySQL.Port
+		username := cfg.MySQL.Username
+		password := cfg.MySQL.Password
+		database := cfg.MySQL.Database
 
 		dsn := fmt.Sprintf("%s:%s@tcp(%s:%s)/%s?charset=utf8mb4&parseTime=True&loc=Local", username, password, host, port, database)
 
