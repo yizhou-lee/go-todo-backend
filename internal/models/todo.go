@@ -1,7 +1,7 @@
 package models
 
 import (
-	"todo-backend/pkg/sql"
+	"todo-backend/pkg/mysql"
 
 	"gorm.io/gorm"
 )
@@ -15,35 +15,35 @@ type Todo struct {
 
 func GetTodos() []Todo {
 	var todos []Todo
-	sql.GetDB().Find(&todos)
+	mysql.GetDB().Find(&todos)
 	return todos
 }
 
 func CreateTodo(t *Todo) *Todo {
-	sql.GetDB().Create(t)
+	mysql.GetDB().Create(t)
 	return t
 }
 
 func GetTodoByID(id int) *Todo {
 	var t Todo
-	sql.GetDB().First(&t, id)
+	mysql.GetDB().First(&t, id)
 	return &t
 }
 
 func UpdateTodoByID(id int, t *Todo) *Todo {
 	var todo Todo
-	sql.GetDB().First(&todo, id)
+	mysql.GetDB().First(&todo, id)
 	if todo.ID != 0 {
-		sql.GetDB().Model(&todo).Updates(t)
+		mysql.GetDB().Model(&todo).Updates(t)
 	}
 	return &todo
 }
 
 func DeleteTodoByID(id int) *Todo {
 	var t Todo
-	sql.GetDB().First(&t, id)
+	mysql.GetDB().First(&t, id)
 	if t.ID != 0 {
-		sql.GetDB().Delete(&t)
+		mysql.GetDB().Delete(&t)
 	}
 	return &t
 }

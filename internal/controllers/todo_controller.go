@@ -3,7 +3,7 @@ package controllers
 import (
 	"net/http"
 	"strconv"
-	"todo-backend/models"
+	"todo-backend/internal/models"
 	"todo-backend/utils"
 
 	"github.com/gin-gonic/gin"

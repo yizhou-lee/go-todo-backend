@@ -1,7 +1,7 @@
 package routes
 
 import (
-	"todo-backend/controllers"
+	"todo-backend/internal/controllers"
 
 	"github.com/gin-gonic/gin"
 )
