@@ -6,13 +6,13 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-var todoController = &controllers.TodoController{}
+var tc = &controllers.TodoController{}
 
 // TodoRoute represents todo-related routes
-func TodoRoute(router *gin.Engine) {
-	router.GET("/todos", todoController.GetTodos)
-	router.POST("/todos", todoController.CreateTodo)
-	router.GET("/todos/:id", todoController.GetTodoByID)
-	router.PUT("/todos/:id", todoController.UpdateTodo)
-	router.DELETE("/todos/:id", todoController.DeleteTodoByID)
+func TodoRoute(r *gin.Engine) {
+	r.GET("/todos", tc.GetTodos)
+	r.POST("/todos", tc.CreateTodo)
+	r.GET("/todos/:id", tc.GetTodoByID)
+	r.PUT("/todos/:id", tc.UpdateTodo)
+	r.DELETE("/todos/:id", tc.DeleteTodoByID)
 }

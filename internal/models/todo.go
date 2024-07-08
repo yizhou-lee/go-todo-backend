@@ -6,11 +6,14 @@ import (
 	"gorm.io/gorm"
 )
 
+// Todo represents a todo item
+//	@Description	A single todo item
+//	@Name			Todo
 type Todo struct {
 	gorm.Model
-	Title       string `json:"title"`
-	Completed   bool   `json:"completed"`
-	Description string `json:"description"`
+	Title       string `json:"title" example:"Buy milk"`
+	Completed   bool   `json:"completed" example:"false"`
+	Description string `json:"description" example:"Remember to buy milk from the grocery store"`
 }
 
 func GetTodos() []Todo {
