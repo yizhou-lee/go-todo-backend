@@ -20,7 +20,8 @@ type TodoController struct{}
 //	@Tags			todos
 //	@Accept			json
 //	@Produce		json
-//	@Success		200	{object}	utils.Response
+//	@Success		200	{object}	utils.Response{data=[]models.Todo}
+//	@Failure		500	{object}	utils.Response
 //	@Router			/todos [get]
 func (tc *TodoController) GetTodos(ctx *gin.Context) {
 	todos, err := models.GetTodos()
@@ -39,10 +40,16 @@ func (tc *TodoController) GetTodos(ctx *gin.Context) {
 //	@Accept			json
 //	@Produce		json
 //	@Param			id	path		int	true	"Todo ID"
-//	@Success		200	{object}	utils.Response
+//	@Success		200	{object}	utils.Response{data=models.Todo}
+//	@Failure		400	{object}	utils.Response
+//	@Failure		500	{object}	utils.Response
 //	@Router			/todos/{id} [get]
 func (tc *TodoController) GetTodoByID(ctx *gin.Context) {
-	id, _ := strconv.Atoi(ctx.Param("id"))
+	id, err := strconv.Atoi(ctx.Param("id"))
+	if err != nil {
+		ctx.JSON(http.StatusBadRequest, utils.ErrorResponse(fmt.Sprintf("Bad request: %s", err), nil))
+		return
+	}
 	todo, err := models.GetTodoByID(id)
 	if err != nil {
 		ctx.JSON(http.StatusInternalServerError, utils.ErrorResponse(fmt.Sprintf("Internal server error: %s", err), nil))
@@ -60,11 +67,13 @@ func (tc *TodoController) GetTodoByID(ctx *gin.Context) {
 //	@Produce		json
 //	@Param			todo	body		models.Todo	true	"Create Todo"
 //	@Success		201		{object}	utils.Response
+//	@Failure		400		{object}	utils.Response
+//	@Failure		500		{object}	utils.Response
 //	@Router			/todos [post]
 func (tc *TodoController) CreateTodo(ctx *gin.Context) {
 	var todo models.Todo
 	if err := ctx.BindJSON(&todo); err != nil {
-		ctx.JSON(http.StatusBadRequest, utils.ErrorResponse(fmt.Sprintf("Internal server error: %s", err), nil))
+		ctx.JSON(http.StatusBadRequest, utils.ErrorResponse(fmt.Sprintf("Bad request: %s", err), nil))
 		return
 	}
 	if err := models.CreateTodo(&todo); err != nil {
@@ -84,14 +93,20 @@ func (tc *TodoController) CreateTodo(ctx *gin.Context) {
 //	@Param			id		path		int			true	"Todo ID"
 //	@Param			todo	body		models.Todo	true	"Update Todo"
 //	@Success		200		{object}	utils.Response
+//	@Failure		400		{object}	utils.Response
+//	@Failure		500		{object}	utils.Response
 //	@Router			/todos/{id} [put]
 func (tc *TodoController) UpdateTodo(ctx *gin.Context) {
 	var todo models.Todo
 	if err := ctx.BindJSON(&todo); err != nil {
-		ctx.JSON(http.StatusBadRequest, utils.ErrorResponse(fmt.Sprintf("Internal server error: %s", err), nil))
+		ctx.JSON(http.StatusBadRequest, utils.ErrorResponse(fmt.Sprintf("Bad request: %s", err), nil))
 		return
 	}
-	id, _ := strconv.Atoi(ctx.Param("id"))
+	id, err := strconv.Atoi(ctx.Param("id"))
+	if err != nil {
+		ctx.JSON(http.StatusBadRequest, utils.ErrorResponse(fmt.Sprintf("Bad request: %s", err), nil))
+		return
+	}
 	if err := models.UpdateTodoByID(id, &todo); err != nil {
 		ctx.JSON(http.StatusInternalServerError, utils.ErrorResponse(fmt.Sprintf("Internal server error: %s", err), nil))
 		return
@@ -108,6 +123,7 @@ func (tc *TodoController) UpdateTodo(ctx *gin.Context) {
 //	@Produce		json
 //	@Param			id	path		int	true	"Todo ID"
 //	@Success		200	{object}	utils.Response
+//	@Failure		500	{object}	utils.Response
 //	@Router			/todos/{id} [delete]
 func (tc *TodoController) DeleteTodoByID(ctx *gin.Context) {
 	id, _ := strconv.Atoi(ctx.Param("id"))
