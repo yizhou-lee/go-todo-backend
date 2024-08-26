@@ -15,6 +15,10 @@ todo-backend
 ├─cmd
 │  └─app: 程序的入口文件
 ├─configs: 包含所有的配置文件
+├─docs: 包含openapi规范的文档
+│  ├─docs.go: swaggo/swag 自动生成的文档
+│  ├─swagger.json: json格式的openapi规范
+│  └─swagger.yaml: yaml格式的openapi规范
 ├─internal
 │  ├─controllers: 包含所有的控制器，控制器处理具体的请求和响应
 │  ├─middlewares: 包含所有的中间件，中间件用于处理请求和响应，例如身份验证、日志记录等
