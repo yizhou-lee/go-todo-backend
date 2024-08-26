@@ -1,33 +1,28 @@
-basePath: /
+basePath: /api/v1
 definitions:
-  gorm.DeletedAt:
-    properties:
-      time:
-        type: string
-      valid:
-        description: Valid is true if Time is not NULL
-        type: boolean
-    type: object
-  todo-backend_internal_models.Todo:
+  models.Todo:
     description: A single todo item
     properties:
       completed:
         example: false
         type: boolean
-      createdAt:
-        type: string
-      deletedAt:
-        $ref: '#/definitions/gorm.DeletedAt'
       description:
         example: Remember to buy milk from the grocery store
         type: string
       id:
+        example: 1
         type: integer
       title:
         example: Buy milk
         type: string
-      updatedAt:
+    type: object
+  utils.Response:
+    properties:
+      data: {}
+      message:
         type: string
+      success:
+        type: boolean
     type: object
 host: localhost:8080
 info:
@@ -47,8 +42,7 @@ paths:
         "200":
           description: OK
           schema:
-            additionalProperties: true
-            type: object
+            $ref: '#/definitions/utils.Response'
       summary: Get list of todos
       tags:
       - todos
@@ -62,15 +56,14 @@ paths:
         name: todo
         required: true
         schema:
-          $ref: '#/definitions/todo-backend_internal_models.Todo'
+          $ref: '#/definitions/models.Todo'
       produces:
       - application/json
       responses:
         "201":
           description: Created
           schema:
-            additionalProperties: true
-            type: object
+            $ref: '#/definitions/utils.Response'
       summary: Create a new todo
       tags:
       - todos
@@ -88,8 +81,10 @@ paths:
       produces:
       - application/json
       responses:
-        "204":
-          description: Todo deleted successfully
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/utils.Response'
       summary: Delete a todo
       tags:
       - todos
@@ -109,8 +104,7 @@ paths:
         "200":
           description: OK
           schema:
-            additionalProperties: true
-            type: object
+            $ref: '#/definitions/utils.Response'
       summary: Get a todo by ID
       tags:
       - todos
@@ -129,15 +123,14 @@ paths:
         name: todo
         required: true
         schema:
-          $ref: '#/definitions/todo-backend_internal_models.Todo'
+          $ref: '#/definitions/models.Todo'
       produces:
       - application/json
       responses:
         "200":
           description: OK
           schema:
-            additionalProperties: true
-            type: object
+            $ref: '#/definitions/utils.Response'
       summary: Update an existing todo
       tags:
       - todos
