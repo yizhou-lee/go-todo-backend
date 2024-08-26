@@ -10,9 +10,11 @@ var tc = &controllers.TodoController{}
 
 // TodoRoute represents todo-related routes
 func TodoRoute(r *gin.RouterGroup) {
-	r.GET("/todos", tc.GetTodos)
-	r.POST("/todos", tc.CreateTodo)
-	r.GET("/todos/:id", tc.GetTodoByID)
-	r.PUT("/todos/:id", tc.UpdateTodo)
-	r.DELETE("/todos/:id", tc.DeleteTodoByID)
+	tr := r.Group("/todos")
+
+	tr.GET("", tc.GetTodos)
+	tr.POST("", tc.CreateTodo)
+	tr.GET("/:id", tc.GetTodoByID)
+	tr.PUT("/:id", tc.UpdateTodo)
+	tr.DELETE("/:id", tc.DeleteTodoByID)
 }
