@@ -1,6 +1,7 @@
 package controllers
 
 import (
+	"fmt"
 	"net/http"
 	"strconv"
 	"todo-backend/internal/models"
@@ -19,10 +20,14 @@ type TodoController struct{}
 //	@Tags			todos
 //	@Accept			json
 //	@Produce		json
-//	@Success		200	{object}	map[string]interface{}
+//	@Success		200	{object}	utils.Response
 //	@Router			/todos [get]
 func (tc *TodoController) GetTodos(ctx *gin.Context) {
-	todos := models.GetTodos()
+	todos, err := models.GetTodos()
+	if err != nil {
+		ctx.JSON(http.StatusInternalServerError, utils.ErrorResponse(fmt.Sprintf("Internal server error: %s", err), nil))
+		return
+	}
 	ctx.JSON(http.StatusOK, utils.SuccessResponse("Todos fetched successfully", todos))
 }
 
@@ -34,11 +39,15 @@ func (tc *TodoController) GetTodos(ctx *gin.Context) {
 //	@Accept			json
 //	@Produce		json
 //	@Param			id	path		int	true	"Todo ID"
-//	@Success		200	{object}	map[string]interface{}
+//	@Success		200	{object}	utils.Response
 //	@Router			/todos/{id} [get]
 func (tc *TodoController) GetTodoByID(ctx *gin.Context) {
 	id, _ := strconv.Atoi(ctx.Param("id"))
-	todo := models.GetTodoByID(id)
+	todo, err := models.GetTodoByID(id)
+	if err != nil {
+		ctx.JSON(http.StatusInternalServerError, utils.ErrorResponse(fmt.Sprintf("Internal server error: %s", err), nil))
+		return
+	}
 	ctx.JSON(http.StatusOK, utils.SuccessResponse("Todo fetched successfully", todo))
 }
 
@@ -50,16 +59,19 @@ func (tc *TodoController) GetTodoByID(ctx *gin.Context) {
 //	@Accept			json
 //	@Produce		json
 //	@Param			todo	body		models.Todo	true	"Create Todo"
-//	@Success		201		{object}	map[string]interface{}
+//	@Success		201		{object}	utils.Response
 //	@Router			/todos [post]
 func (tc *TodoController) CreateTodo(ctx *gin.Context) {
 	var todo models.Todo
-	err := ctx.BindJSON(&todo)
-	if err != nil {
+	if err := ctx.BindJSON(&todo); err != nil {
+		ctx.JSON(http.StatusBadRequest, utils.ErrorResponse(fmt.Sprintf("Internal server error: %s", err), nil))
 		return
 	}
-	models.CreateTodo(&todo)
-	ctx.JSON(http.StatusCreated, utils.SuccessResponse("Todo created successfully", todo))
+	if err := models.CreateTodo(&todo); err != nil {
+		ctx.JSON(http.StatusInternalServerError, utils.ErrorResponse(fmt.Sprintf("Internal server error: %s", err), nil))
+		return
+	}
+	ctx.JSON(http.StatusCreated, utils.SuccessResponse("Todo created successfully", nil))
 }
 
 // UpdateTodo godoc
@@ -71,31 +83,37 @@ func (tc *TodoController) CreateTodo(ctx *gin.Context) {
 //	@Produce		json
 //	@Param			id		path		int			true	"Todo ID"
 //	@Param			todo	body		models.Todo	true	"Update Todo"
-//	@Success		200		{object}	map[string]interface{}
+//	@Success		200		{object}	utils.Response
 //	@Router			/todos/{id} [put]
 func (tc *TodoController) UpdateTodo(ctx *gin.Context) {
-	id, _ := strconv.Atoi(ctx.Param("id"))
 	var todo models.Todo
-	err := ctx.BindJSON(&todo)
-	if err != nil {
+	if err := ctx.BindJSON(&todo); err != nil {
+		ctx.JSON(http.StatusBadRequest, utils.ErrorResponse(fmt.Sprintf("Internal server error: %s", err), nil))
 		return
 	}
-	models.UpdateTodoByID(id, &todo)
-	ctx.JSON(http.StatusOK, utils.SuccessResponse("Todo updated successfully", todo))
+	id, _ := strconv.Atoi(ctx.Param("id"))
+	if err := models.UpdateTodoByID(id, &todo); err != nil {
+		ctx.JSON(http.StatusInternalServerError, utils.ErrorResponse(fmt.Sprintf("Internal server error: %s", err), nil))
+		return
+	}
+	ctx.JSON(http.StatusOK, utils.SuccessResponse("Todo updated successfully", nil))
 }
 
-// DeleteTodo godoc
+// DeleteTodoByID DeleteTodo godoc
 //
 //	@Summary		Delete a todo
 //	@Description	Delete an existing todo by its ID
 //	@Tags			todos
 //	@Accept			json
 //	@Produce		json
-//	@Param			id	path	int	true	"Todo ID"
-//	@Success		204	"Todo deleted successfully"
+//	@Param			id	path		int	true	"Todo ID"
+//	@Success		200	{object}	utils.Response
 //	@Router			/todos/{id} [delete]
 func (tc *TodoController) DeleteTodoByID(ctx *gin.Context) {
 	id, _ := strconv.Atoi(ctx.Param("id"))
-	todo := models.DeleteTodoByID(id)
-	ctx.JSON(http.StatusOK, utils.SuccessResponse("Todo deleted successfully", todo))
+	if err := models.DeleteTodoByID(id); err != nil {
+		ctx.JSON(http.StatusInternalServerError, utils.ErrorResponse(fmt.Sprintf("Internal server error: %s", err), nil))
+		return
+	}
+	ctx.JSON(http.StatusOK, utils.SuccessResponse("Todo deleted successfully", nil))
 }

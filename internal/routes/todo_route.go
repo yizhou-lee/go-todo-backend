@@ -9,7 +9,7 @@ import (
 var tc = &controllers.TodoController{}
 
 // TodoRoute represents todo-related routes
-func TodoRoute(r *gin.Engine) {
+func TodoRoute(r *gin.RouterGroup) {
 	r.GET("/todos", tc.GetTodos)
 	r.POST("/todos", tc.CreateTodo)
 	r.GET("/todos/:id", tc.GetTodoByID)
