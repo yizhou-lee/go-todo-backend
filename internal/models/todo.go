@@ -8,7 +8,6 @@ import (
 // Todo represents a todo item
 //
 //	@Description	A single todo item
-//	@Name			Todo
 type Todo struct {
 	ID          int    `json:"id" gorm:"primaryKey" example:"1"`
 	Title       string `json:"title" example:"Buy milk"`
